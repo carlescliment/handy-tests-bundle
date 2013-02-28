@@ -1,27 +1,21 @@
 <?php
 
+namespace BladeTester\HandyTestsBundle\Model;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-//require_once(__DIR__ . "/../../AppKernel.php");
 
-
-class AutoCleanTestCase extends WebTestCase {
+class HandyTestCase extends WebTestCase {
 
     protected $em;
     protected $client;
     private $router;
 
 
-    public function setUp() {
-        self::$kernel = new \AppKernel("test", true);
-        self::$kernel->boot();
+    public function setUp(array $auth = array()) {
+        $this->client = self::createClient(array(), $auth);
         $this->initializeEntityManager();
-        $this->client = self::createClient(array(), array(
-            'PHP_AUTH_USER' => 'test',
-            'PHP_AUTH_PW'   => 'test',
-        ));
-        $this->client->followRedirects();
-        $this->router = self::$kernel->getContainer()->get('router');
+        $this->router = $this->client->getKernel()->getContainer()->get('router');
     }
 
 
@@ -38,7 +32,7 @@ class AutoCleanTestCase extends WebTestCase {
 
 
     private function initializeEntityManager() {
-        $this->em = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $this->em = $this->client->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
     }
 
 
@@ -58,5 +52,3 @@ class AutoCleanTestCase extends WebTestCase {
         TableTruncator::truncate($tables, $this->em);
     }
 }
-
-?>
