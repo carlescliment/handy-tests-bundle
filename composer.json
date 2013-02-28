@@ -1,0 +1,21 @@
+{
+    "name": "carlescliment/handy-tests-bundle",
+    "type": "symfony-bundle",
+    "description": "A handy toolkit for testing in Symfony 2",
+    "keywords": ["testing"],
+    "homepage": "https://github.com/carlescliment/handy-tests-bundle",
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "Carles Climent Granell",
+            "email": "carlescliment@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/symfony" : ">=2.0.12",
+    },
+    "autoload": {
+        "psr-0": { "BladeTester\\HandyTestsBundle": "src" }
+    }
+}
