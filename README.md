@@ -95,7 +95,7 @@ Having a single place where instantiate or persist entities helps you to mantain
 
 ### The Handy Test Case
 
-This is a TestCase that provides you with all the features described above. Just inherit it in your functional test cases.
+This is a TestCase that provides all the features described above and a little more. Just inherit it in your functional test cases.
 
 
     namespace Your\Bundle\Tests\Controller;
