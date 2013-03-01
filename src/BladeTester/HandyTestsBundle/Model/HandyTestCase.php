@@ -11,6 +11,7 @@ class HandyTestCase extends WebTestCase {
     protected $client;
     private $router;
     private $factoryGirl;
+    private $dispatcher;
 
 
     public function setUp(array $auth = array()) {
@@ -18,6 +19,7 @@ class HandyTestCase extends WebTestCase {
         $this->initializeEntityManager();
         $this->router = $this->client->getKernel()->getContainer()->get('router');
         $this->factoryGirl = $this->client->getKernel()->getContainer()->get('handy_tests.factory_girl');
+        $this->dispatcher = $this->container->get('event_dispatcher');
     }
 
 
@@ -61,6 +63,10 @@ class HandyTestCase extends WebTestCase {
     protected function create($class_name, array $attributes = array()) {
         return $this->factoryGirl->create($class_name, $attributes);
 
+    }
+
+    protected function dispatchEvent($event_name, $event_class) {
+        $this->dispatcher->dispatch($event_name, $event_class);
     }
 
 }
