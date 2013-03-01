@@ -25,10 +25,10 @@ Execute `php composer.phar update carlescliment/handy-tests-bundle`
 
 ### 3. Modify your `app/config/config_test.yml`
 
-services:
-    handy_tests.factory_girl:
-        class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
-        arguments: ['Your\MainBundle\Tests\Factory', "@doctrine.orm.entity_manager"]
+    services:
+        handy_tests.factory_girl:
+            class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
+            arguments: ['Your\MainBundle\Tests\Factory', "@doctrine.orm.entity_manager"]
 
 
 ## The Toolkit
@@ -47,6 +47,7 @@ The table truncator allows you to -obvious- truncate tables (MySQL only).
 
 
 ### The stub chainer
+[Explained here][stubchainer]
 
 ### The Factory Girl
 The Factory Girl allows you to easily instantiate and persist entities.
@@ -151,4 +152,4 @@ Please, feel free to provide feedback of this bundle. Contributions will be much
 
 
 [carlescliment]: https://github.com/carlescliment
-
+[stubchainer]: https://github.com/carlescliment/BladeTester/tree/master/ChainedStubsBundle
