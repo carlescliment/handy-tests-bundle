@@ -10,12 +10,14 @@ class HandyTestCase extends WebTestCase {
     protected $em;
     protected $client;
     private $router;
+    private $factoryGirl;
 
 
     public function setUp(array $auth = array()) {
         $this->client = self::createClient(array(), $auth);
         $this->initializeEntityManager();
         $this->router = $this->client->getKernel()->getContainer()->get('router');
+        $this->factoryGirl = $this->client->getKernel()->getContainer()->get('handy_tests.factory_girl');
     }
 
 
@@ -51,4 +53,14 @@ class HandyTestCase extends WebTestCase {
     protected function truncateTables($tables = array()) {
         TableTruncator::truncate($tables, $this->em);
     }
+
+    protected function build($class_name, array $attributes = array()) {
+        return $this->factoryGirl->build($class_name, $attributes);
+    }
+
+    protected function create($class_name, array $attributes = array()) {
+        return $this->factoryGirl->create($class_name, $attributes);
+
+    }
+
 }
