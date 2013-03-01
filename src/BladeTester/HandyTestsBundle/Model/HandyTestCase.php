@@ -19,7 +19,7 @@ class HandyTestCase extends WebTestCase {
         $this->initializeEntityManager();
         $this->router = $this->client->getKernel()->getContainer()->get('router');
         $this->factoryGirl = $this->client->getKernel()->getContainer()->get('handy_tests.factory_girl');
-        $this->dispatcher = $this->container->get('event_dispatcher');
+        $this->dispatcher = $this->client->getKernel()->getContainer()->get('event_dispatcher');
     }
 
 
