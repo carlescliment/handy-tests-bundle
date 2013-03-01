@@ -104,7 +104,7 @@ This is a TestCase that provides all the features described above and a little m
 
     class FooControllerTest extends HandyTestCase {
 
-        public function setUp(array $auth = array()) {
+        public function setUp() {
             parent::setUp(); // for annonymous users
             parent::setUp(array("PHP_AUTH_USER" => "test_user", "PHP_AUTH_PW"   => "test_password",)); // for basic http authentication
         }
