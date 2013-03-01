@@ -52,4 +52,19 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
         $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
         $this->assertEquals($expectedType, get_class($class));
     }
+
+    /**
+     * @test
+     */
+    public function itCreatesAnInstanceIfClassExists() {
+        // Arrange
+        $factory_girl = new FactoryGirl($this->existingNamespace);
+
+        // Act
+        $class = $factory_girl->create($this->existingClass);
+
+        // Expect (exception)
+        $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
+        $this->assertEquals($expectedType, get_class($class));
+    }
 }

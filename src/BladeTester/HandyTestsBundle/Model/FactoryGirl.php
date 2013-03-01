@@ -22,6 +22,15 @@ class FactoryGirl {
         return $this->buildInstance($factory_class);
     }
 
+    public function create($instance_name)
+    {
+        $this->assertNamespaceIsDefined();
+        $factory_class = $this->getFactoryFullNameFor($instance_name);
+        $this->assertFactoryExists($factory_class);
+        return $this->createInstance($factory_class);
+    }
+
+
     private function assertNamespaceIsDefined()
     {
         if (!$this->namespace) {
@@ -45,6 +54,12 @@ class FactoryGirl {
     {
         $factory = new $factory_name();
         return $factory->build(array());
+    }
+
+    private function createInstance($factory_name)
+    {
+        $factory = new $factory_name();
+        return $factory->create(array());
     }
 
 }
