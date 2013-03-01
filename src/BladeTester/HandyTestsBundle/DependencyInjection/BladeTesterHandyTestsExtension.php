@@ -8,7 +8,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader;
 
 
-class BladeTesterLightNewsExtension extends Extension
+class BladeTesterHandyTestsExtension extends Extension
 {
 
     public function load(array $configs, ContainerBuilder $container)
