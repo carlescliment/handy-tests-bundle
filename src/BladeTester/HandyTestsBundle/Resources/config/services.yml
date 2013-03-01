@@ -1,0 +1,4 @@
+services:
+    handy_tests.factory_girl:
+        class: "BladeTester\HandyTests\Model\FactoryGirl"
+        arguments: ["@doctrine.orm.entity_manager", ""]
