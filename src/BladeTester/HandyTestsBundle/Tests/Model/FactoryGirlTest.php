@@ -7,8 +7,15 @@ use BladeTester\HandyTestsBundle\Model\FactoryGirl,
 
 class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
 
-    private $existingNamespace = 'BladeTester\HandyTestsBundle\Factory';
-    private $existingClass = 'Sample';
+    private $existingNamespace;
+    private $existingClass;
+    private $om;
+
+    public function setUp() {
+        $this->om = $this->getMock('Doctrine\Common\Persistence\ObjectManager', array('persist', 'flush'));
+        $this->existingNamespace = 'BladeTester\HandyTestsBundle\Factory';
+        $this->existingClass = 'Sample';
+    }
 
     /**
      * @test
@@ -16,7 +23,7 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itThrowsAnExceptionIfNamespaceIsNotDefined() {
         // Arrange
-        $factory_girl = new FactoryGirl(null);
+        $factory_girl = new FactoryGirl(null, $this->om);
 
         // Expect (exception)
 
@@ -30,7 +37,7 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itThrowsAnExceptionIfFactoryIsNotDefined() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace);
+        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
 
         // Expect (exception)
 
@@ -43,12 +50,12 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itBuildsAnInstanceIfClassExists() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace);
+        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
 
         // Act
         $class = $factory_girl->build($this->existingClass);
 
-        // Expect (exception)
+        // Expect
         $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
         $this->assertEquals($expectedType, get_class($class));
     }
@@ -58,13 +65,14 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itCreatesAnInstanceIfClassExists() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace);
+        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
 
         // Act
         $class = $factory_girl->create($this->existingClass);
 
-        // Expect (exception)
+        // Expect
         $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
         $this->assertEquals($expectedType, get_class($class));
     }
+
 }

@@ -8,26 +8,32 @@ use BladeTester\HandyTestsBundle\Exception as Exceptions;
 class FactoryGirl {
 
     private $namespace;
+    private $om;
 
-    public function __construct($namespace)
+    public function __construct($namespace, ObjectManager $om)
     {
         $this->namespace = $namespace;
+        $this->om = $om;
     }
 
-    public function build($instance_name)
+    public function build($instance_name, array $attributes = array())
     {
+        $factory = $this->getFactoryFor($instance_name);
+        return $factory->build($attributes);
+    }
+
+    public function create($instance_name, array $attributes = array())
+    {
+        $factory = $this->getFactoryFor($instance_name);
+        return $factory->create($attributes);
+    }
+
+
+    private function getFactoryFor($instance_name) {
         $this->assertNamespaceIsDefined();
         $factory_class = $this->getFactoryFullNameFor($instance_name);
         $this->assertFactoryExists($factory_class);
-        return $this->buildInstance($factory_class);
-    }
-
-    public function create($instance_name)
-    {
-        $this->assertNamespaceIsDefined();
-        $factory_class = $this->getFactoryFullNameFor($instance_name);
-        $this->assertFactoryExists($factory_class);
-        return $this->createInstance($factory_class);
+        return new $factory_class($this->om);
     }
 
 
@@ -50,35 +56,4 @@ class FactoryGirl {
         return $this->namespace . '\\' . $class . 'Factory';
     }
 
-    private function buildInstance($factory_name)
-    {
-        $factory = new $factory_name();
-        return $factory->build(array());
-    }
-
-    private function createInstance($factory_name)
-    {
-        $factory = new $factory_name();
-        return $factory->create(array());
-    }
-
 }
-
-/*
-class FactoryGirl {
-
-    private $om;
-    private $namespace;
-
-    public function __construct(ObjectManager $om, $namespace) {
-        $this->om = $om;
-        $this->namespace = $namespace;
-    }
-
-    public static function create($instance_name, $parameters = array()) {
-        $class_name = $instance_name . 'Factory';
-        $full_class_name = "VM\CRMBundle\Tests\Factory\\$class_name";
-        return call_user_func_array(array($full_class_name, 'create'), array($this->em, $parameters));
-    }
-}
-*/
