@@ -18,10 +18,9 @@ Add this line to your `composer.json`
 Execute `php composer.phar update carlescliment/handy-tests-bundle`
 
 ### 2. Load the bundle in `app/AppKernel.php`
-    $bundles = array(
-         // Your other bundles
-         new BladeTester\HandyTestsBundle\BladeTesterHandyTestsBundle(),
-    );
+    if ('test' === $this->getEnvironment()) {
+        $bundles[] = new BladeTester\HandyTestsBundle\BladeTesterHandyTestsBundle();
+    }
 
 ### 3. Modify your `app/config/config_test.yml`
 
