@@ -118,6 +118,11 @@ This is a TestCase that provides all the features described above and a little m
 
             // Use the router instead of concrete paths
             $crawler = $this->visit('accout_show', array('id' => $account->getId()));
+
+            // Perform asynchronous requests
+            $route_data = array('id' => 666); // to be used in the router
+            $request_data = array('foo' => 'bar'); // things that go in $_POST or $_GET
+            $crawler = $this->asyncRequest('my_service_route', $route_data, $request_data, 'POST');
  
             // debug the screen being displayed
             $this->printContents();

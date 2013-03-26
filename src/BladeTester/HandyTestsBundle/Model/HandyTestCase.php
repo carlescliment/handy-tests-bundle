@@ -48,9 +48,20 @@ class HandyTestCase extends WebTestCase {
 
     protected function visit($route_name, array $arguments = array()) {
         $route = $this->router->generate($route_name, $arguments);
-        return $this->client->request('GET', $route);
+        return $this->request('GET', $route);
     }
 
+    protected function asyncRequest($route_name, array $route_args = array(), $request_args = array(), $method = 'GET') {
+        $route = $this->router->generate($route_name, $route_args);
+        $headers = array(
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+            );
+        return $this->request($method, $route, $request_args, $headers);
+    }
+
+    private function request($method, $route, $arguments = array(), $headers = array()) {
+        return $this->client->request($method, $route, $arguments, array(), $headers);
+    }
 
     protected function truncateTables($tables = array()) {
         TableTruncator::truncate($tables, $this->em);
