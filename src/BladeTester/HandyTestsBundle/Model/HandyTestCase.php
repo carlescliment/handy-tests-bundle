@@ -80,4 +80,13 @@ class HandyTestCase extends WebTestCase {
         $this->dispatcher->dispatch($event_name, $event_class);
     }
 
+    protected function assertJSONResponse($expected_response) {
+        $json_response = $this->client->getResponse()->getContent();
+        $decoded_response = json_decode($json_response);
+        if (is_array($expected_response)) {
+            $decoded_response = (array)$decoded_response;
+        }
+        $this->assertEquals($expected_response, $decoded_response);
+    }
+
 }
