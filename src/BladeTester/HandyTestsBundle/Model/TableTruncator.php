@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace BladeTester\HandyTestsBundle\Model;
 
