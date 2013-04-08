@@ -147,6 +147,7 @@ This is a TestCase that provides all the features described above and a little m
 ## Credits
 
 * Author: [Carles Climent][carlescliment]
+* Contributor: [Pedro Nofuentes][pedronofuentes]
 
 
 ## Contribute and feedback
@@ -156,4 +157,5 @@ Please, feel free to provide feedback of this bundle. Contributions will be much
 
 
 [carlescliment]: https://github.com/carlescliment
+[pedronofuentes]: https://github.com/pedronofuentes
 [stubchainer]: https://github.com/carlescliment/BladeTester/tree/master/ChainedStubsBundle
