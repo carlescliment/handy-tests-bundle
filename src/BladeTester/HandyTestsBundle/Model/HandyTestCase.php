@@ -17,9 +17,13 @@ class HandyTestCase extends WebTestCase {
     public function setUp(array $auth = array()) {
         $this->client = self::createClient(array(), $auth);
         $this->initializeEntityManager();
-        $this->router = $this->client->getKernel()->getContainer()->get('router');
-        $this->factoryGirl = $this->client->getKernel()->getContainer()->get('handy_tests.factory_girl');
-        $this->dispatcher = $this->client->getKernel()->getContainer()->get('event_dispatcher');
+        $this->router = $this->getService('router');
+        $this->factoryGirl = $this->getService('handy_tests.factory_girl');
+        $this->dispatcher = $this->getService('event_dispatcher');
+    }
+
+    public function getService($service_name) {
+        return $this->client->getKernel()->getContainer()->get($service_name)
     }
 
 
