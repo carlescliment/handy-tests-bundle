@@ -23,7 +23,7 @@ class HandyTestCase extends WebTestCase {
     }
 
     public function getService($service_name) {
-        return $this->client->getKernel()->getContainer()->get($service_name)
+        return $this->client->getKernel()->getContainer()->get($service_name);
     }
 
 
