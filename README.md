@@ -60,9 +60,9 @@ This is an example of a factory:
     use Doctrine\Common\Persistence\ObjectManager;
     use BladeTester\HandyTestsBundle\Model\FactoryInterface;
 
-    use BladeTester\HandyTestsBundle\Entity\Sample;
+    use BladeTester\HandyTestsBundle\Entity\Person;
 
-    class SampleFactory implements FactoryInterface {
+    class PersonFactory implements FactoryInterface {
     
         private $om;
     
@@ -71,14 +71,21 @@ This is an example of a factory:
         }
     
         public function build(array $attributes) {
-            return new Sample;
+            $name = isset($attributes['name']) ? $attributes['name'] : 'Factorized name';
+            $surname = isset($attributes['surname']) ? $attributes['surname'] : 'Factorized surname';
+            $age = isset($attributes['age']) ? $attributes['surname'] : null;
+            $person = new Person;
+            $person->setName($name);
+            $person->setSurname($surname);
+            $person->setAge($age);
+            return $person;
         }
     
         public function create(array $attributes) {
-            $sample = $this->build($attributes);
-            $this->om->persist($sample);
+            $person = $this->build($attributes);
+            $this->om->persist($person);
             $this->om->flush();
-            return $sample;
+            return $person;
         }
     }
 
@@ -87,9 +94,9 @@ Then, in your test, you can instantiate the factory girl:
 
 
     $factory_girl = $client->getKernel()->getContainer()->get('handy_tests.factory_girl')
-    $sample = $factory_girl->create('Sample');
+    $person = $factory_girl->create('Person');
 
-Having a single place where instantiate or persist entities helps you to mantain your code and allows building complex instances with default values.
+Instantiating and persisting objects from a single place helps removing duplication and allows building complex instances with default values without generating noise.
 
 
 ### The Handy Test Case
