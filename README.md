@@ -73,7 +73,7 @@ This is an example of a factory:
         public function build(array $attributes) {
             $name = isset($attributes['name']) ? $attributes['name'] : 'Factorized name';
             $surname = isset($attributes['surname']) ? $attributes['surname'] : 'Factorized surname';
-            $age = isset($attributes['age']) ? $attributes['surname'] : null;
+            $age = isset($attributes['age']) ? $attributes['age'] : null;
             $person = new Person;
             $person->setName($name);
             $person->setSurname($surname);
@@ -90,7 +90,7 @@ This is an example of a factory:
     }
 
 
-Then, in your test, you can instantiate the factory girl:
+Then, in your test, you can create Person instances cleanly:
 
 
     $factory_girl = $client->getKernel()->getContainer()->get('handy_tests.factory_girl')
