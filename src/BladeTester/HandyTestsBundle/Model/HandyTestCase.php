@@ -27,14 +27,19 @@ class HandyTestCase extends WebTestCase {
     }
 
 
-    /**
-     * Used to solve the "Too many connections" problem.
-     * @see http://sf.khepin.com/2012/02/symfony2-testing-with-php-unit-quick-tip/
-     */
     public function tearDown() {
+        /**
+         * Used to solve the "Too many connections" problem.
+         * @see http://sf.khepin.com/2012/02/symfony2-testing-with-php-unit-quick-tip/
+         */
         if ($this->em) {
             $this->em->getConnection()->close();
         }
+        $this->em = null;
+        $this->client = null;
+        $this->router = null;
+        $this->factoryGirl = null;
+        $this->dispatcher = null;
         parent::tearDown();
     }
 
