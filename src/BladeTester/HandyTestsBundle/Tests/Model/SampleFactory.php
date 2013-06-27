@@ -1,14 +1,13 @@
 <?php
 
-namespace BladeTester\HandyTestsBundle\Factory;
+namespace BladeTester\HandyTestsBundle\Tests\Model;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use BladeTester\HandyTestsBundle\Model\FactoryInterface;
+use BladeTester\HandyTestsBundle\Tests\Entity\Sample;
 
-use BladeTester\HandyTestsBundle\Entity\Sample;
-
-class SampleFactory implements FactoryInterface {
-
+class SampleFactory implements FactoryInterface
+{
     private $om;
 
     public function __construct(ObjectManager $om) {
@@ -23,7 +22,12 @@ class SampleFactory implements FactoryInterface {
         $sample = $this->build($attributes);
         $this->om->persist($sample);
         $this->om->flush();
+
         return $sample;
     }
-}
 
+    public function getName()
+    {
+        return 'sample';
+    }
+}

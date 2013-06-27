@@ -1,4 +1,4 @@
 services:
     handy_tests.factory_girl:
         class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
-        arguments: ['Namespace\To\Your\Factory', "@doctrine.orm.entity_manager"]
+        arguments: [[]]

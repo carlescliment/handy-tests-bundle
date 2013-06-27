@@ -7,28 +7,12 @@ use BladeTester\HandyTestsBundle\Model\FactoryGirl,
 
 class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
 
-    private $existingNamespace;
     private $existingClass;
     private $om;
 
     public function setUp() {
-        $this->om = $this->getMock('Doctrine\Common\Persistence\ObjectManager', array('persist', 'flush'));
-        $this->existingNamespace = 'BladeTester\HandyTestsBundle\Factory';
+        $this->om = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $this->existingClass = 'Sample';
-    }
-
-    /**
-     * @test
-     * @expectedException BladeTester\HandyTestsBundle\Exception\UndefinedNamespaceException
-     */
-    public function itThrowsAnExceptionIfNamespaceIsNotDefined() {
-        // Arrange
-        $factory_girl = new FactoryGirl(null, $this->om);
-
-        // Expect (exception)
-
-        // Act
-        $factory_girl->build('Sample');
     }
 
     /**
@@ -37,7 +21,7 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itThrowsAnExceptionIfFactoryIsNotDefined() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
+        $factory_girl = new FactoryGirl();
 
         // Expect (exception)
 
@@ -50,14 +34,15 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itBuildsAnInstanceIfClassExists() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
+        $factory = new SampleFactory($this->om);
+        $factory_girl = new FactoryGirl(array($factory));
+        $expectedClass = 'BladeTester\HandyTestsBundle\Tests\Entity\Sample';
 
         // Act
-        $class = $factory_girl->build($this->existingClass);
+        $sample = $factory_girl->build('sample');
 
         // Expect
-        $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
-        $this->assertEquals($expectedType, get_class($class));
+        $this->assertEquals($expectedClass, get_class($sample));
     }
 
     /**
@@ -65,14 +50,15 @@ class FactoryGirlTest extends \PHPUnit_Framework_TestCase {
      */
     public function itCreatesAnInstanceIfClassExists() {
         // Arrange
-        $factory_girl = new FactoryGirl($this->existingNamespace, $this->om);
+        $factory = new SampleFactory($this->om);
+        $factory_girl = new FactoryGirl(array($factory));
+        $expectedClass = 'BladeTester\HandyTestsBundle\Tests\Entity\Sample';
 
         // Act
-        $class = $factory_girl->create($this->existingClass);
+        $sample = $factory_girl->create('sample');
 
         // Expect
-        $expectedType = 'BladeTester\HandyTestsBundle\Entity\Sample';
-        $this->assertEquals($expectedType, get_class($class));
+        $this->assertEquals($expectedClass, get_class($sample));
     }
 
 }
