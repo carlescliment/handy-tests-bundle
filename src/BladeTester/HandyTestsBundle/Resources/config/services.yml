@@ -1,4 +1,4 @@
 services:
     handy_tests.factory_girl:
         class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
-        arguments: ["@service_container", []]
+        arguments: [[]]

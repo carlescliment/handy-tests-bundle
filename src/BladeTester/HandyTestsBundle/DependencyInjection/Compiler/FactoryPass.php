@@ -4,6 +4,7 @@ namespace BladeTester\HandyTestsBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds all services with the tags "handy_tests.factory" as arguments
@@ -22,15 +23,16 @@ class FactoryPass implements CompilerPassInterface
         // Builds an array with service IDs as keys and tag aliases as values
         $factories = array();
 
-        foreach ($container->findTaggedServiceIds('handy_tests.factory') as $serviceId => $tag) {
-            $alias = isset($tag[0]['alias'])
-                ? $tag[0]['alias']
-                : $serviceId;
+        foreach (array_keys($container->findTaggedServiceIds('handy_tests.factory')) as $id) {
+            $class = $container->getDefinition($id)->getClass();
 
-            // Flip, because we want tag aliases (= factory identifiers) as keys
-            $factories[$alias] = $serviceId;
+            $refClass = new \ReflectionClass($class);
+            $interface = 'BladeTester\HandyTestsBundle\Model\FactoryInterface';
+            if (!$refClass->implementsInterface($interface)) {
+                throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
+            }
+
+            $definition->addMethodCall('addFactory', array(new Reference($id)));
         }
-
-        $definition->replaceArgument(1, $factories);
     }
 }
