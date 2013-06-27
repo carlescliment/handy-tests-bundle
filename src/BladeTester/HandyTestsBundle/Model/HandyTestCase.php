@@ -55,9 +55,9 @@ class HandyTestCase extends WebTestCase {
 
 
 
-    protected function visit($route_name, array $arguments = array(), $method = 'GET') {
-        $route = $this->router->generate($route_name, $arguments);
-        return $this->request($method, $route);
+    protected function visit($route_name, array $route_args = array(), $request_args = array(), $method = 'GET') {
+        $route = $this->router->generate($route_name, $route_args);
+        return $this->request($method, $route, $request_args);
     }
 
     protected function asyncRequest($route_name, array $route_args = array(), $request_args = array(), $method = 'GET') {
