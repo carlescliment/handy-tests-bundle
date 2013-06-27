@@ -2,58 +2,53 @@
 
 namespace BladeTester\HandyTestsBundle\Model;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use BladeTester\HandyTestsBundle\Exception as Exceptions;
 
-class FactoryGirl {
+class FactoryGirl
+{
 
-    private $namespace;
-    private $om;
+    private $container;
+    private $factoryServicesIds;
 
-    public function __construct($namespace, ObjectManager $om)
+    public function __construct(ContainerInterface $container, array $factoryServicesIds)
     {
-        $this->namespace = $namespace;
-        $this->om = $om;
+        $this->container = $container;
+        $this->factoryServicesIds = $factoryServicesIds;
     }
 
-    public function build($instance_name, array $attributes = array())
+    public function build($name, array $attributes = array())
     {
-        $factory = $this->getFactoryFor($instance_name);
+        $factory = $this->getFactoryFor($name);
         return $factory->build($attributes);
     }
 
-    public function create($instance_name, array $attributes = array())
+    public function create($name, array $attributes = array())
     {
-        $factory = $this->getFactoryFor($instance_name);
+        $factory = $this->getFactoryFor($name);
         return $factory->create($attributes);
     }
 
+    private function getFactoryFor($name)
+    {
+        $this->assertFactoryExists($name);
+        $factory = $this->container->get($this->factoryServicesIds[$name]);
+        $this->assertFactoryImplementsInterface($factory, $name);
 
-    private function getFactoryFor($instance_name) {
-        $this->assertNamespaceIsDefined();
-        $factory_class = $this->getFactoryFullNameFor($instance_name);
-        $this->assertFactoryExists($factory_class);
-        return new $factory_class($this->om);
+        return $factory;
     }
 
-
-    private function assertNamespaceIsDefined()
+    private function assertFactoryExists($name)
     {
-        if (!$this->namespace) {
-            throw new Exceptions\UndefinedNamespaceException('Namespace has not been defined.');
+        if (!isset($this->factoryServicesIds[$name])) {
+            throw new Exceptions\UndefinedFactoryException(sprintf('The factory "%s" is not registered with the service container.', $name));
         }
     }
 
-    private function assertFactoryExists($factory_class)
+    private function assertFactoryImplementsInterface($factory, $name)
     {
-        if (!class_exists($factory_class)) {
-            throw new Exceptions\UndefinedFactoryException("No factory found in $factory_class");
+        if (!$factory instanceof FactoryInterface) {
+            throw new \RunTimeException(sprintf('The service `%s` must implement `FactoryInterface`', $name));
         }
     }
-
-    private function getFactoryFullNameFor($class)
-    {
-        return $this->namespace . '\\' . $class . 'Factory';
-    }
-
 }
