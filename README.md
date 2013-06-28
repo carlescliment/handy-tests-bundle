@@ -25,6 +25,8 @@ Thanks to [@franmomu][franmomu], this bundle has been significantly improved. If
         "carlescliment/handy-tests-bundle": "1.0.x-dev"
     }
 
+Read this document abour [how to upgrade](/UPGRADE-1.1.md/).
+
 
 ### 2. Load the bundle in `app/AppKernel.php`
     if ('test' === $this->getEnvironment()) {
