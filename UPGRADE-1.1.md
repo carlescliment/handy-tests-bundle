@@ -53,6 +53,14 @@ After that, you have to implement the new method added to FactoryInterface:
     }
 
 
+Don't forget to delete the old definition in your config_test.yml:
+
+    services:
+        handy_tests.factory_girl:
+            class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
+            arguments: ['Your\MainBundle\Tests\Factory', "@doctrine.orm.entity_manager"]
+
+
 And that's it! If you have factories of different bundles, now you can define the proper namespace and move them. Also, if you have other dependencies (i.e. one factory that needs another) you can easily add them to the constructor arguments.
 
 
