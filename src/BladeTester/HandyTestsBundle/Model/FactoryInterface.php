@@ -6,4 +6,5 @@ interface FactoryInterface {
 
     public function build(array $attributes);
     public function create(array $attributes);
+    public function getName();
 }
