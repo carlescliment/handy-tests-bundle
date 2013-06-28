@@ -5,6 +5,7 @@ This is a collection of the tools I use daily to make testing easier. Feel free 
 
 
 
+
 ## Installation
 
 ### 1. Update your vendors
@@ -16,6 +17,14 @@ Add this line to your `composer.json`
     }
 
 Execute `php composer.phar update carlescliment/handy-tests-bundle`
+
+### Important note:
+Thanks to @franmomu, this bundle is currently under major changes and needs the doc to be updated. Please, stick to the stable version until finished.
+
+    "require": {
+        "carlescliment/handy-tests-bundle": "1.0.x-dev"
+    }
+
 
 ### 2. Load the bundle in `app/AppKernel.php`
     if ('test' === $this->getEnvironment()) {
