@@ -53,7 +53,7 @@ After that, you have to implement the new method added to FactoryInterface:
     }
 
 
-And that's it! If you have factories of different bundles, now you can define the proper namespace and move them. Also, if you have other dependencies (i.e. one factory that needs another) you can easily add it to the constructor arguments.
+And that's it! If you have factories of different bundles, now you can define the proper namespace and move them. Also, if you have other dependencies (i.e. one factory that needs another) you can easily add them to the constructor arguments.
 
 
 
