@@ -19,7 +19,7 @@ Add this line to your `composer.json`
 Execute `php composer.phar update carlescliment/handy-tests-bundle`
 
 ### Important note:
-Thanks to [@franmomu][franmomu], this bundle is currently under major improvements and needs the doc to be updated. Please, stick to the previous version until finished.
+Thanks to [@franmomu][franmomu], this bundle has been significantly improved. If you are currently using it and don't have time to make the changes needed, please stick to the previous version.
 
     "require": {
         "carlescliment/handy-tests-bundle": "1.0.x-dev"
@@ -58,28 +58,37 @@ The table truncator allows you to -obvious- truncate tables (MySQL only).
 [Explained here][stubchainer]
 
 ### The Factory Girl
-The Factory Girl allows you to easily instantiate and persist entities.
+The Factory Girl allows you to easily instantiate and persist entities. Instantiating and persisting objects from a single place helps removing duplication and allows building complex instances with default values without generating noise.
 
-First, you need a directory where you can put your factories. This is why the `handy_tests.factory_girl` is for. In the path you define as param, build your own Factories.
 
 This is an example of a factory:
 
-    namespace Your\MainBundle\Factory;
-    
+    namespace Your\OwnBundle\Factory;
+
     use Doctrine\Common\Persistence\ObjectManager;
     use BladeTester\HandyTestsBundle\Model\FactoryInterface;
 
-    use BladeTester\HandyTestsBundle\Entity\Person;
+    use Your\OwnBundle\Entity\Person;
 
     class PersonFactory implements FactoryInterface {
-    
+
         private $om;
-    
-        public function __construct(ObjectManager $om) {
+
+
+        public function __construct(ObjectManager $om)
+        {
             $this->om = $om;
         }
-    
-        public function build(array $attributes) {
+
+
+        public function getName()
+        {
+            return 'Person';
+        }
+
+
+        public function build(array $attributes)
+        {
             $name = isset($attributes['name']) ? $attributes['name'] : 'Factorized name';
             $surname = isset($attributes['surname']) ? $attributes['surname'] : 'Factorized surname';
             $age = isset($attributes['age']) ? $attributes['age'] : null;
@@ -89,8 +98,10 @@ This is an example of a factory:
             $person->setAge($age);
             return $person;
         }
-    
-        public function create(array $attributes) {
+
+
+        public function create(array $attributes)
+        {
             $person = $this->build($attributes);
             $this->om->persist($person);
             $this->om->flush();
@@ -99,13 +110,35 @@ This is an example of a factory:
     }
 
 
+Once you have written your factory, register it as a tagged service in order to make it available from your tests.
+
+file: services.yml
+    imports:
+        - { resource: factories.yml }
+
+    # Your other stuff
+
+file: factories.yml
+
+    your_vendor.handy_test.person_factory:
+        class: Your\OwnBundle\Factory\PersonFactory
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: handy_tests.factory }
+
+
+
 Then, in your test, you can create Person instances cleanly:
 
 
     $factory_girl = $client->getKernel()->getContainer()->get('handy_tests.factory_girl')
     $person = $factory_girl->create('Person');
 
-Instantiating and persisting objects from a single place helps removing duplication and allows building complex instances with default values without generating noise.
+
+Or even easier if you extend the HandyTestCase in your tests (see later):
+
+    $person = $this->create('Person');
+
 
 
 ### The Handy Test Case
@@ -114,7 +147,7 @@ This is a TestCase that provides all the features described above and a little m
 
 
     namespace Your\Bundle\Tests\Controller;
-    
+
     use BladeTester\HandyTestsBundle\Model\HandyTestCase;
 
     class FooControllerTest extends HandyTestCase {
@@ -127,10 +160,11 @@ This is a TestCase that provides all the features described above and a little m
         /**
          * @test
          */
-        public function handyFeatures() {
-            // Use your factories to build or create entities.
-            $complex_entity = $this->create('ComplexEntity', array('name' => 'sampleName')); // persisted
-            $complex_entity = $this->build('ComplexEntity', array('name' => 'sampleName'));  // not persisted
+        public function handyFeatures()
+        {
+            // Use factories to build or create entities.
+            $persisted_entity = $this->create('ComplexEntity', array('name' => 'sampleName'));
+            $not_persisted_entity = $this->build('ComplexEntity', array('name' => 'sampleName'));
 
             // Use the router instead of concrete paths
             $crawler = $this->visit('accout_show', array('id' => $account->getId()));
@@ -139,7 +173,7 @@ This is a TestCase that provides all the features described above and a little m
             $route_data = array('id' => 666); // to be used in the router
             $request_data = array('foo' => 'bar'); // things that go in $_POST or $_GET
             $crawler = $this->asyncRequest('my_service_route', $route_data, $request_data, 'POST');
- 
+
             // debug the screen being displayed
             $this->printContents();
 
