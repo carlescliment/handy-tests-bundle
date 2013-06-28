@@ -113,18 +113,24 @@ This is an example of a factory:
 Once you have written your factory, register it as a tagged service in order to make it available from your tests.
 
 file: services.yml
+
     imports:
         - { resource: factories.yml }
 
-    # Your other stuff
+    parameters:
+        # ....
+
+    services:
+        # Your other stuff
 
 file: factories.yml
 
-    your_vendor.handy_test.person_factory:
-        class: Your\OwnBundle\Factory\PersonFactory
-        arguments: ["@doctrine.orm.entity_manager"]
-        tags:
-            - { name: handy_tests.factory }
+    services:
+        your_vendor.handy_test.person_factory:
+            class: Your\OwnBundle\Factory\PersonFactory
+            arguments: ["@doctrine.orm.entity_manager"]
+            tags:
+                - { name: handy_tests.factory }
 
 
 
