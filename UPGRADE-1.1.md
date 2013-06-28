@@ -11,9 +11,9 @@ The Factory Girl has been significantly improved with the great contributions of
 
 In the 1.0 version of the FactoryGirl, many decisions were made based on conventions. In order to create a factory of an entity, you passed the name of the entity as an argument to build/create and FactoryGirl then looked for a class named "Entity" + "Factory" in the defined namespace. This approach had many flaws:
 
-- You had to contain all your factories in the same namespace. This made difficult to decouple bundles and share them between projects.
+- All your factories had to be in the same namespace. This made difficult to decouple bundles and share them between projects.
 
-- You had no control over dependency injection. It was the FactoryGirl itself who handled it. So if you needed another services in your factories, you had to create them in constructor or pass them to build/create method in the array.
+- You had no control over dependency injection. It was the FactoryGirl itself who handled it. So if you needed other services in your factories, you had to create them in constructor or pass them to build/create method.
 
 
 ##The new configuration approach
