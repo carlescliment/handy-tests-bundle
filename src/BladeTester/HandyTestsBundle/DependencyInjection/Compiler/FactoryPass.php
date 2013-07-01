@@ -3,6 +3,7 @@
 namespace BladeTester\HandyTestsBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -12,27 +13,39 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FactoryPass implements CompilerPassInterface
 {
+
+    const FACTORY_INTERFACE = 'BladeTester\HandyTestsBundle\Model\FactoryInterface';
+    const FACTORY_GIRL_ID = 'handy_tests.factory_girl';
+    const FACTORY_TAG = 'handy_tests.factory';
+
+
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('handy_tests.factory_girl')) {
-            return;
+        if ($container->hasDefinition(self::FACTORY_GIRL_ID)) {
+            $this->addDefinitionsToFactoryGirl($container);
         }
+    }
 
-        $definition = $container->getDefinition('handy_tests.factory_girl');
 
-        // Builds an array with service IDs as keys and tag aliases as values
-        $factories = array();
-
-        foreach (array_keys($container->findTaggedServiceIds('handy_tests.factory')) as $id) {
+    private function addDefinitionsToFactoryGirl(ContainerBuilder $container)
+    {
+        $factory_girl_definition = $container->getDefinition(self::FACTORY_GIRL_ID);
+        $factory_definitions = $container->findTaggedServiceIds(self::FACTORY_TAG);
+        foreach (array_keys($factory_definitions) as $id)
+        {
             $class = $container->getDefinition($id)->getClass();
-
-            $refClass = new \ReflectionClass($class);
-            $interface = 'BladeTester\HandyTestsBundle\Model\FactoryInterface';
-            if (!$refClass->implementsInterface($interface)) {
-                throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
+            if (!$this->implementsInterface($class)) {
+                throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, self::FACTORY_INTERFACE));
             }
-
-            $definition->addMethodCall('addFactory', array(new Reference($id)));
+            $factory_girl_definition->addMethodCall('addFactory', array(new Reference($id)));
         }
+
+    }
+
+
+    private function implementsInterface($class)
+    {
+        $refClass = new \ReflectionClass($class);
+        return $refClass->implementsInterface(self::FACTORY_INTERFACE);
     }
 }

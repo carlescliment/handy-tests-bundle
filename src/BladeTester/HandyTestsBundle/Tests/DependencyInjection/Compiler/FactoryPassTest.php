@@ -2,80 +2,187 @@
 
 namespace BladeTester\HandyTestsBundle\Tests\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpFoundation\Request;
 use BladeTester\HandyTestsBundle\DependencyInjection\Compiler\FactoryPass;
 
 class FactoryPassTest extends \PHPUnit_Framework_TestCase
 {
+
+    private $factoryPass;
+    private $container;
+    private $factoryDefinition;
+
+
+    public function setUp() {
+        $this->factoryPass = new FactoryPass;
+        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $this->factoryDefinition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+    }
+
+
+    /**
+     * @test
+     */
+    public function itChecksThatFactoryGirlIsDefined()
+    {
+        // Arrange
+
+        // Expect
+        $this->container->expects($this->once())
+            ->method('hasDefinition')
+            ->with('handy_tests.factory_girl');
+
+        // Act
+        $this->factoryPass->process($this->container);
+    }
+
+
+    /**
+     * @test
+     */
+    public function itDoesNothingIfFactoryGirlIsNotDefined()
+    {
+        // Arrange
+        $this->stubFactoryIsNotDefined();
+
+        // Expect
+        $this->container->expects($this->never())
+            ->method('getDefinition');
+
+        // Act
+        $this->factoryPass->process($this->container);
+    }
+
+
+    /**
+     * @test
+     */
+    public function itGetsTheFactoryTaggedServices()
+    {
+        // Arrange
+        $this->stubFactoryIsDefined();
+        $this->container->expects($this->atLeastOnce())
+            ->method('getDefinition')
+            ->will($this->onConsecutiveCalls(
+                $this->factoryDefinition
+                ));
+
+        // Expect
+        $this->container->expects($this->once())
+            ->method('findTaggedServiceIds')
+            ->with('handy_tests.factory')
+            ->will($this->returnValue(array()));
+
+        // Act
+        $this->factoryPass->process($this->container);
+    }
+
+
+    /**
+     * @test
+     */
+    public function itGetsTheFactoryIfDefined()
+    {
+        // Arrange
+        $this->stubFactoryIsDefined();
+        $this->stubTaggedServices(array());
+
+        // Expect
+        $this->container->expects($this->atLeastOnce())
+            ->method('getDefinition')
+            ->will($this->returnValue($this->factoryDefinition));
+
+        // Act
+        $this->factoryPass->process($this->container);
+    }
+
+
+    /**
+     * @test
+     */
+    public function itAddsEachFactoryToFactoryGirl()
+    {
+        // Arrange
+        $this->stubFactoryIsDefined();
+        $this->stubTaggedServices(array('factory', 'another_factory'));
+        $this->container->expects($this->atLeastOnce())
+            ->method('getDefinition')
+            ->will($this->onConsecutiveCalls(
+                $this->factoryDefinition,
+                $this->getDefinitionForClass('BladeTester\HandyTestsBundle\Tests\Model\SampleFactory'),
+                $this->getDefinitionForClass('BladeTester\HandyTestsBundle\Tests\Model\SampleFactory')
+                ));
+
+        // Expect
+        $this->factoryDefinition->expects($this->exactly(2))
+            ->method('addMethodCall');
+
+        // Act
+        $this->factoryPass->process($this->container);
+    }
+
+
+
     /**
      * @test
      * @expectedException \InvalidArgumentException
      */
     public function itThrowsAnExceptionIfFactoryDoesNotImplementInterface()
     {
-        // one service, not implementing any interface
-        $services = array(
-            'my_factory' => array(),
-        );
-
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
-        $definition->expects($this->atLeastOnce())
-            ->method('getClass')
-            ->will($this->returnValue('stdClass'));
-
-        $builder = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $builder->expects($this->any())
-            ->method('hasDefinition')
-            ->will($this->returnValue(true));
-
-        $builder->expects($this->atLeastOnce())
-            ->method('findTaggedServiceIds')
-            ->will($this->returnValue($services));
-
-        $builder->expects($this->atLeastOnce())
+        // Arrange
+        $this->stubFactoryIsDefined();
+        $this->stubTaggedServices(array('factory'));
+        $this->container->expects($this->atLeastOnce())
             ->method('getDefinition')
-            ->will($this->returnValue($definition));
+            ->will($this->onConsecutiveCalls(
+                $this->factoryDefinition,
+                $this->getDefinitionForClass('stdClass')
+                ));
 
-        $pass = new FactoryPass();
-        $pass->process($builder);
+        // Act
+        $this->factoryPass->process($this->container);
     }
 
-    public function testValidContentRenderer()
+
+    private function stubFactoryIsNotDefined()
     {
-        $services = array(
-            'my_factory' => array(),
-        );
+        $this->stubFactoryDefinitionStatus(false);
+    }
 
-        $renderer = $this->getMock('Symfony\Component\DependencyInjection\Definition');
-        $renderer
-            ->expects($this->once())
-            ->method('addMethodCall')
-            ->with('addFactory', array(new Reference('my_factory')))
-        ;
 
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
-        $definition->expects($this->atLeastOnce())
-            ->method('getClass')
-            ->will($this->returnValue('BladeTester\HandyTestsBundle\Tests\Model\SampleFactory'));
+    private function stubFactoryIsDefined()
+    {
+        $this->stubFactoryDefinitionStatus(true);
+    }
 
-        $builder = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $builder->expects($this->any())
+
+    private function stubFactoryDefinitionStatus($status)
+    {
+        $this->container->expects($this->any())
             ->method('hasDefinition')
-            ->will($this->returnValue(true));
+            ->with('handy_tests.factory_girl')
+            ->will($this->returnValue($status));
+    }
 
-        // We don't test kernel.fragment_renderer here
-        $builder->expects($this->atLeastOnce())
+
+    private function stubTaggedServices($services)
+    {
+        $this->container->expects($this->any())
             ->method('findTaggedServiceIds')
             ->will($this->returnValue($services));
-
-        $builder->expects($this->atLeastOnce())
-            ->method('getDefinition')
-            ->will($this->onConsecutiveCalls($renderer, $definition));
-
-        $pass = new FactoryPass();
-        $pass->process($builder);
     }
+
+
+    private function getDefinitionForClass($class)
+    {
+        $definition_mock = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $definition_mock->expects($this->any())
+            ->method('getClass')
+            ->will($this->returnValue($class));
+        $this->container->expects($this->any())
+            ->method('getDefinition')
+            ->will($this->returnValue($definition_mock));
+        return $definition_mock;
+
+    }
+
 }
