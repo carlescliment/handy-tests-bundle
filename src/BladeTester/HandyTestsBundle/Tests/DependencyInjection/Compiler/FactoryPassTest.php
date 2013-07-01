@@ -80,25 +80,6 @@ class FactoryPassTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itGetsTheFactoryIfDefined()
-    {
-        // Arrange
-        $this->stubFactoryIsDefined();
-        $this->stubTaggedServices(array());
-
-        // Expect
-        $this->container->expects($this->atLeastOnce())
-            ->method('getDefinition')
-            ->will($this->returnValue($this->factoryDefinition));
-
-        // Act
-        $this->factoryPass->process($this->container);
-    }
-
-
-    /**
-     * @test
-     */
     public function itAddsEachFactoryToFactoryGirl()
     {
         // Arrange
