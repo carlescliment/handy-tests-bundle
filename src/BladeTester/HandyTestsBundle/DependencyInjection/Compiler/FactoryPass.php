@@ -22,12 +22,12 @@ class FactoryPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if ($container->hasDefinition(self::FACTORY_GIRL_ID)) {
-            $this->addDefinitionsToFactoryGirl($container);
+            $this->addFactoriesToFactoryGirl($container);
         }
     }
 
 
-    private function addDefinitionsToFactoryGirl(ContainerBuilder $container)
+    private function addFactoriesToFactoryGirl(ContainerBuilder $container)
     {
         $factory_girl_definition = $container->getDefinition(self::FACTORY_GIRL_ID);
         $factory_definitions = $container->findTaggedServiceIds(self::FACTORY_TAG);
