@@ -30,7 +30,7 @@ class HandyTestCase extends WebTestCase
 
 
     public function getParameter($parameter_name) {
-        return $this->getContainer()->getParamenter($service_name);
+        return $this->getContainer()->getParameter($parameter_name);
     }
 
 
