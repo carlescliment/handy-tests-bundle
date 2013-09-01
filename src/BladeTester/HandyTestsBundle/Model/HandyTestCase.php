@@ -5,7 +5,8 @@ namespace BladeTester\HandyTestsBundle\Model;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 
-class HandyTestCase extends WebTestCase {
+class HandyTestCase extends WebTestCase
+{
 
     protected $em;
     protected $client;
@@ -14,7 +15,8 @@ class HandyTestCase extends WebTestCase {
     private $dispatcher;
 
 
-    public function setUp(array $auth = array()) {
+    public function setUp(array $auth = array())
+    {
         $this->client = self::createClient(array(), $auth);
         $this->initializeEntityManager();
         $this->router = $this->getService('router');
@@ -55,47 +57,62 @@ class HandyTestCase extends WebTestCase {
     }
 
 
-    protected function printContents() {
+    protected function printContents()
+    {
         print $this->client->getResponse()->getContent();
     }
 
 
-
-    protected function visit($route_name, array $route_args = array(), $request_args = array(), $method = 'GET') {
+    protected function visit($route_name, array $route_args = array(), $request_args = array(), $method = 'GET')
+    {
         $route = $this->router->generate($route_name, $route_args);
         return $this->request($method, $route, $request_args);
     }
 
-    protected function asyncRequest($route_name, array $route_args = array(), $request_args = array(), $method = 'GET') {
+
+    protected function asyncRequest($route_name, array $route_args = array(), $request_args = array(), $method = 'GET', $headers = array())
+    {
         $route = $this->router->generate($route_name, $route_args);
-        $headers = array(
+        $headers += array(
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
-            );
+        );
         return $this->request($method, $route, $request_args, $headers);
     }
 
-    private function request($method, $route, $arguments = array(), $headers = array()) {
+
+    private function request($method, $route, $arguments = array(), $headers = array())
+    {
         return $this->client->request($method, $route, $arguments, array(), $headers);
     }
 
-    protected function truncateTables($tables = array()) {
+
+    protected function truncateTables($tables = array())
+    {
         TableTruncator::truncate($tables, $this->em);
     }
 
-    protected function build($class_name, array $attributes = array()) {
+
+    protected function build($class_name, array $attributes = array())
+    {
         return $this->factoryGirl->build($class_name, $attributes);
     }
 
-    protected function create($class_name, array $attributes = array()) {
+
+    protected function create($class_name, array $attributes = array())
+    {
         return $this->factoryGirl->create($class_name, $attributes);
 
     }
 
-    protected function dispatchEvent($event_name, $event_class) {
+
+    protected function dispatchEvent($event_name, $event_class)
+    {
         $this->dispatcher->dispatch($event_name, $event_class);
     }
 
-    protected function assertJSONResponse($expected_response) {
+
+    protected function assertJSONResponse($expected_response)
+    {
         $json_response = $this->client->getResponse()->getContent();
         $decoded_response = json_decode($json_response, is_array($expected_response));
         $this->assertEquals($expected_response, $decoded_response);
