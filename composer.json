@@ -2,6 +2,7 @@
     "name": "carlescliment/handy-tests-bundle",
     "type": "symfony-bundle",
     "description": "A handy toolkit for testing in Symfony 2",
+    "version": "1.0.0",
     "keywords": ["testing"],
     "homepage": "https://github.com/carlescliment/handy-tests-bundle",
     "license": "Apache2",

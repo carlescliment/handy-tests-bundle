@@ -23,8 +23,14 @@ class HandyTestCase extends WebTestCase {
     }
 
     public function getService($service_name) {
-        return $this->client->getKernel()->getContainer()->get($service_name);
+        return $this->getContainer()->get($service_name);
     }
+
+
+    public function getParameter($parameter_name) {
+        return $this->getContainer()->getParamenter($service_name);
+    }
+
 
 
     public function tearDown() {
@@ -45,7 +51,7 @@ class HandyTestCase extends WebTestCase {
 
 
     private function initializeEntityManager() {
-        $this->em = $this->client->getKernel()->getContainer()->get('doctrine.orm.entity_manager');
+        $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
     }
 
 
@@ -93,6 +99,11 @@ class HandyTestCase extends WebTestCase {
         $json_response = $this->client->getResponse()->getContent();
         $decoded_response = json_decode($json_response, is_array($expected_response));
         $this->assertEquals($expected_response, $decoded_response);
+    }
+
+    private function getContainer()
+    {
+        return $this->client->getKernel()->getContainer();
     }
 
 }
