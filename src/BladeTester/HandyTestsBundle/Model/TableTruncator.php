@@ -7,8 +7,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class TableTruncator {
 
-	public static function truncate(array $tables, ObjectManager $om) {
-        $connection = $om->getConnection();
+	public static function truncate(array $tables, ObjectManager $om, $connection) {
+        $connection = $om->getConnection($connection);
         $platform = $connection->getDatabasePlatform();
         $connection->query("SET foreign_key_checks = 0");
         foreach ($tables as $table) {
