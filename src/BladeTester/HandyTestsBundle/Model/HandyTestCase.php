@@ -88,7 +88,8 @@ class HandyTestCase extends WebTestCase
 
     protected function truncateTables($tables = array(), $connection = 'default')
     {
-        TableTruncator::truncate($tables, $this->getContainer()->get('doctrine')->getManager($connection));
+        $em = $this->getContainer()->get('doctrine')->getManager($connection);
+        TableTruncator::truncate($tables, $em);
     }
 
 
