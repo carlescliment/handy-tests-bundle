@@ -18,16 +18,6 @@ Add this line to your `composer.json`
 
 Execute `php composer.phar update carlescliment/handy-tests-bundle`
 
-### Important note:
-Thanks to [@franmomu][franmomu], this bundle has been significantly improved. If you are currently using it and don't have time to make the changes needed, please stick to the previous version.
-
-    "require": {
-        "carlescliment/handy-tests-bundle": "1.0.x-dev"
-    }
-
-Read this document about [how to upgrade](/UPGRADE-1.1.md/).
-
-
 ### 2. Load the bundle in `app/AppKernel.php`
     if ('test' === $this->getEnvironment()) {
         $bundles[] = new BladeTester\HandyTestsBundle\BladeTesterHandyTestsBundle();
