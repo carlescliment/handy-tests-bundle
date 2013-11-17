@@ -33,12 +33,6 @@ Read this document about [how to upgrade](/UPGRADE-1.1.md/).
         $bundles[] = new BladeTester\HandyTestsBundle\BladeTesterHandyTestsBundle();
     }
 
-### 3. Modify your `app/config/config_test.yml`
-
-    services:
-        handy_tests.factory_girl:
-            class: "BladeTester\HandyTestsBundle\Model\FactoryGirl"
-            arguments: ['Your\MainBundle\Tests\Factory', "@doctrine.orm.entity_manager"]
 
 
 ## The Toolkit
