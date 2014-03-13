@@ -47,7 +47,14 @@ class FactoryGirl
     private function assertFactoryExists($name)
     {
         if (!isset($this->factories[$name])) {
-            throw new Exceptions\UndefinedFactoryException(sprintf('The factory "%s" is not registered with the service container.', $name));
+            $hint = "Please add a service in the container as shown below:\n".
+                    "\n".
+                    "vendor.handy_test.your_factory:\n".
+                    "    class: Path\ToYourBundle\Factory\\".$name."Factory\n".
+                    "    arguments: ['@doctrine.orm.entity_manager']\n".
+                    "        tags:\n".
+                    "            - { name: handy_tests.factory }";
+            throw new Exceptions\UndefinedFactoryException(sprintf('The factory "%s" is not registered with the service container. %s', $name, $hint));
         }
     }
 }
