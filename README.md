@@ -1,6 +1,8 @@
 HandyTestsBundle
 ==================
 
+[![Build Status](https://travis-ci.org/carlescliment/handy-tests-bundle.png)](https://travis-ci.org/carlescliment/handy-tests-bundle)
+
 This is a collection of the tools I use daily to make testing easier. Feel free to use this toolset in your projects!
 
 
@@ -39,9 +41,6 @@ The table truncator allows you to -obvious- truncate tables (MySQL only).
     $tables = array('table1', 'table2', 'table3');
     TableTruncator::truncate($tables, $entity_manager);
 
-
-### The stub chainer
-[Explained here][stubchainer]
 
 ### The Factory Girl
 The Factory Girl allows you to easily instantiate and persist entities. Instantiating and persisting objects from a single place helps removing duplication and allows building complex instances with default values without generating noise.
@@ -202,4 +201,3 @@ Please, feel free to provide feedback of this bundle. Contributions will be much
 [carlescliment]: https://github.com/carlescliment
 [franmomu]: https://github.com/franmomu
 [pedronofuentes]: https://github.com/pedronofuentes
-[stubchainer]: https://github.com/carlescliment/BladeTester/tree/master/ChainedStubsBundle
