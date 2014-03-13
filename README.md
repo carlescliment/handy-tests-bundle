@@ -75,9 +75,9 @@ This is an example of a factory:
 
         public function build(array $attributes)
         {
-            $name = isset($attributes['name']) ?: 'Factorized name';
-            $surname = isset($attributes['surname']) ?: 'Factorized surname';
-            $age = isset($attributes['age']) ?: null;
+            $name = isset($attributes['name']) ? $attributes['name'] : 'Factorized name';
+            $surname = isset($attributes['surname']) ? attributes['surname'] : 'Factorized surname';
+            $age = isset($attributes['age']) ? $attributes['age'] : null;
             $person = new Person;
             $person->setName($name);
             $person->setSurname($surname);
