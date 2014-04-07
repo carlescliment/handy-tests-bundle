@@ -52,8 +52,8 @@ class FactoryGirl
                     "vendor.handy_test.your_factory:\n".
                     "    class: Path\ToYourBundle\Factory\\".$name."Factory\n".
                     "    arguments: ['@doctrine.orm.entity_manager']\n".
-                    "        tags:\n".
-                    "            - { name: handy_tests.factory }";
+                    "    tags:\n".
+                    "        - { name: handy_tests.factory }";
             throw new Exceptions\UndefinedFactoryException(sprintf('The factory "%s" is not registered within the service container. %s', $name, $hint));
         }
     }
