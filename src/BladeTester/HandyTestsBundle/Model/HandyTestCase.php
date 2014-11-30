@@ -24,6 +24,15 @@ class HandyTestCase extends WebTestCase
         $this->dispatcher = $this->getService('event_dispatcher');
     }
 
+    public function tearDown()
+    {
+        $this->em = null;
+        $this->client = null;
+        $this->router = null;
+        $this->factoryGirl = null;
+        $this->dispatcher = null;
+    }
+
     public function getService($service_name) {
         return $this->getContainer()->get($service_name);
     }
