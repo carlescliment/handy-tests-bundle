@@ -30,15 +30,6 @@ class HandyTestCase extends WebTestCase
         return $this->getParameter('locale') ?: 'en';
     }
 
-    public function tearDown()
-    {
-        $this->em = null;
-        $this->client = null;
-        $this->router = null;
-        $this->factoryGirl = null;
-        $this->dispatcher = null;
-    }
-
     public function getService($service_name) {
         return $this->getContainer()->get($service_name);
     }
@@ -47,8 +38,6 @@ class HandyTestCase extends WebTestCase
     public function getParameter($parameter_name) {
         return $this->getContainer()->getParameter($parameter_name);
     }
-
-
 
     public function tearDown() {
         /**
@@ -66,24 +55,20 @@ class HandyTestCase extends WebTestCase
         parent::tearDown();
     }
 
-
     private function initializeEntityManager() {
         $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
     }
-
 
     protected function printContents()
     {
         print $this->client->getResponse()->getContent();
     }
 
-
     protected function visit($route_name, array $route_args = array(), $request_args = array(), $method = 'GET')
     {
         $route = $this->router->generate($route_name, $route_args);
         return $this->request($method, $route, $request_args);
     }
-
 
     protected function asyncRequest($route_name, array $route_args = array(), $request_args = array(), $method = 'GET', $headers = array())
     {
@@ -94,24 +79,20 @@ class HandyTestCase extends WebTestCase
         return $this->request($method, $route, $request_args, $headers);
     }
 
-
     private function request($method, $route, $arguments = array(), $headers = array())
     {
         return $this->client->request($method, $route, $arguments, array(), $headers);
     }
-
 
     protected function truncateTables($tables = array())
     {
         TableTruncator::truncate($tables, $this->em);
     }
 
-
     protected function build($class_name, array $attributes = array())
     {
         return $this->factoryGirl->build($class_name, $attributes);
     }
-
 
     protected function create($class_name, array $attributes = array())
     {
@@ -119,12 +100,10 @@ class HandyTestCase extends WebTestCase
 
     }
 
-
     protected function dispatchEvent($event_name, $event_class)
     {
         $this->dispatcher->dispatch($event_name, $event_class);
     }
-
 
     protected function assertJSONResponse($expected_response)
     {
@@ -137,5 +116,4 @@ class HandyTestCase extends WebTestCase
     {
         return $this->client->getKernel()->getContainer();
     }
-
 }
