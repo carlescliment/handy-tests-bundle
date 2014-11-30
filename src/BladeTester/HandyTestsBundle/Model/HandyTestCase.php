@@ -20,8 +20,14 @@ class HandyTestCase extends WebTestCase
         $this->client = self::createClient(array(), $auth);
         $this->initializeEntityManager();
         $this->router = $this->getService('router');
+        $this->router->getContext()->setParameter('_locale', $this->getLocale());
         $this->factoryGirl = $this->getService('handy_tests.factory_girl');
         $this->dispatcher = $this->getService('event_dispatcher');
+    }
+
+    protected function getLocale()
+    {
+        return $this->getParameter('locale') ?: 'en';
     }
 
     public function tearDown()
